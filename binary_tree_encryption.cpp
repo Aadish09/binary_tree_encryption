@@ -19,10 +19,13 @@ char * level_1_e(string s,char*arr,char *arr1 ){
         arr1[i+1]=char(int(arr[i+1])+i+1);
         
     }
-   
+   for(int i=0;i<s.length();i++){
+       cout<<arr1[i];
+   }
+   cout<<endl;
     return arr1;
 }
-Node * level_2_e(char *arr1){
+Node * make_tree(char *arr1){
     
     int n= sizeof(arr1)/sizeof(arr1[0]);
     queue<Node*> q;
@@ -62,10 +65,48 @@ Node * level_2_e(char *arr1){
     return t;
     
 }
-string cypher_text(Node* root) 
+void preorder(Node *root1,Node* root2, int lvl) 
+{ 
+    // Base cases 
+    if (root1 == NULL || root2==NULL) 
+        return; 
+  
+    // Swap subtrees if level is even 
+    if (lvl%2 == 0) 
+        swap(root1->data, root2->data); 
+  
+    // Recur for left and right subtrees (Note : left of root1 
+    // is passed and right of root2 in first call and opposite 
+    // in second call. 
+    preorder(root1->left, root2->right, lvl+1); 
+    preorder(root1->right, root2->left, lvl+1); 
+} 
+  
+// This function calls preorder() for left and right children 
+// of root 
+Node* reverseAlternate(Node *root) 
+{ Node*t=root;
+   preorder(root->left, root->right, 0); 
+   return t;
+} 
+string level2_d(char * arr,char * arr2){
+    string s="";
+    
+    int n=sizeof(arr)/sizeof(arr[0]);
+    for(int i=0;i<n;i+=2){
+        arr2[i]=char(int(arr[i])-(i+2));
+        arr2[i+1]=char(int(arr[i+1])-(i+1));
+    }
+    
+    for(int i=0;i<n;i++){
+        s=s+arr2[i];
+    }
+    return s;
+}
+string get_string(Node* root) 
 { string s="";
     if (root == NULL) 
-        return; 
+        return NULL; 
     queue<Node*> n; 
     n.push(root); 
     while (!n.empty()) { 
@@ -89,8 +130,15 @@ int main()
     int l=s.length();
     char arr[s.length()+1];
     char arr1[s.length()+1];
-    string cypher = cypher_text(level_2_e(level_1_e(s,arr,arr1)));
+    char arr2[s.length()+1];
+    string cypher = get_string(reverseAlternate(make_tree(level_1_e(s,arr,arr1))));
     cout<<"The cypher text is :"<<cypher;
+    strcpy(arr, cypher.c_str());
+    cout<<endl;
+    strcpy(arr, get_string(reverseAlternate(make_tree(arr))).c_str());
+    string plainText= level2_d(arr,arr2);
+    cout<<"The plain text is :"<<plainText;
     return 0;
 }
+
 
