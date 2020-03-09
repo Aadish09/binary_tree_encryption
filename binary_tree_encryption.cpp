@@ -15,14 +15,12 @@ char * level_1_e(string s,char*arr,char *arr1 ){
     strcpy(arr, s.c_str());
     
     for(int i=0;i<s.length();i+=2){
-        arr1[i]=char(int(arr[i])+i+2);
-        arr1[i+1]=char(int(arr[i+1])+i+1);
+        int a=int(arr[i])+i+2;
+        int b=int(arr[i+1])+i+1;
+        arr1[i]=char(a);
+        arr1[i+1]=char(b);
         
     }
-   for(int i=0;i<s.length();i++){
-       cout<<arr1[i];
-   }
-   cout<<endl;
     return arr1;
 }
 Node * make_tree(char *arr1){
@@ -67,23 +65,15 @@ Node * make_tree(char *arr1){
 }
 void preorder(Node *root1,Node* root2, int lvl) 
 { 
-    // Base cases 
     if (root1 == NULL || root2==NULL) 
         return; 
-  
-    // Swap subtrees if level is even 
+
     if (lvl%2 == 0) 
         swap(root1->data, root2->data); 
-  
-    // Recur for left and right subtrees (Note : left of root1 
-    // is passed and right of root2 in first call and opposite 
-    // in second call. 
     preorder(root1->left, root2->right, lvl+1); 
     preorder(root1->right, root2->left, lvl+1); 
 } 
-  
-// This function calls preorder() for left and right children 
-// of root 
+
 Node* reverseAlternate(Node *root) 
 { Node*t=root;
    preorder(root->left, root->right, 0); 
@@ -117,6 +107,7 @@ string get_string(Node* root)
             n.push(n.front()->right); 
         n.pop(); 
     } 
+    
     return s;
 }
 
@@ -131,14 +122,20 @@ int main()
     char arr[s.length()+1];
     char arr1[s.length()+1];
     char arr2[s.length()+1];
+    // cout<<"Without :"<<get_string(make_tree(level_1_e(s,arr,arr1)))<<endl;
     string cypher = get_string(reverseAlternate(make_tree(level_1_e(s,arr,arr1))));
     cout<<"The cypher text is :"<<cypher;
     strcpy(arr, cypher.c_str());
     cout<<endl;
+    
     strcpy(arr, get_string(reverseAlternate(make_tree(arr))).c_str());
+    
     string plainText= level2_d(arr,arr2);
     cout<<"The plain text is :"<<plainText;
     return 0;
 }
+
+
+
 
 
